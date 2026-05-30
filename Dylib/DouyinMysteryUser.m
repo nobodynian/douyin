@@ -153,7 +153,7 @@ static NSMutableArray *discoveredUsers = nil;
     center.y = MAX(margin, MIN(center.y, screenSize.height - margin));
     
     view.center = center;
-    [gesture setTranslation:CGPointZero inView:window];
+    [gesture setTranslation:CGPointMake(0, 0) inView:window];
 }
 
 + (void)toggleList {
@@ -170,7 +170,18 @@ static NSMutableArray *discoveredUsers = nil;
         listViewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         listViewController.view.frame = CGRectMake(20, 80, 340, 550);
         
-        UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+        // 获取当前的 key window
+        UIWindow *keyWindow = nil;
+        for (UIWindow *window in [UIApplication sharedApplication].windows) {
+            if (window.isKeyWindow) {
+                keyWindow = window;
+                break;
+            }
+        }
+        if (!keyWindow) {
+            keyWindow = [UIApplication sharedApplication].windows.firstObject;
+        }
+        
         [keyWindow.rootViewController presentViewController:listViewController animated:YES completion:^{
             isListVisible = YES;
             UITableView *tableView = objc_getAssociatedObject(listViewController, "tableView");

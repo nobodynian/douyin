@@ -1,27 +1,32 @@
 name: Build dylib
 
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-  workflow_dispatch:
+on: [push, workflow_dispatch]
 
 jobs:
   build:
     runs-on: macos-latest
     
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Build dylib
-      run: |
-        cd Dylib
-        chmod +x build_arm64.sh
-        ./build_arm64.sh
-    
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: libDouyinMysteryUser
-        path: Dylib/libDouyinMysteryUser.dylib
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: List files
+        run: ls -la
+        
+      - name: Build dylib (simple)
+        run: |
+          # 创建输出目录
+          mkdir -p output
+          
+          # 使用 clang 直接编译
+          cd Dylib
+          
+          xcrun --sdk iphoneos clang -arch arm64 -isysroot $(xcrun --sdk iphoneos --show-sdk-path) -dynamiclib -framework Foundation -framework UIKit -o ../output/libDouyinMysteryUser.dylib DouyinMysteryUser.m -install_name @rpath/libDouyinMysteryUser.dylib -compatibility_version 1.0.0 -current_version 1.0.0 -fobjc-arc
+          
+          ls -la ../output
+          
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libDouyinMysteryUser
+          path: output/

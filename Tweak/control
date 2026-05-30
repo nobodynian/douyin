@@ -1,0 +1,9 @@
+Package: com.yourcompany.douyinmysteryuser
+Name: DouyinMysteryUser
+Depends: mobilesubstrate
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: 获取抖音直播间神秘人主页地址
+Maintainer: Your Name
+Author: Your Name
+Section: Tweaks

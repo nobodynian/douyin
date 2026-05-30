@@ -1,0 +1,27 @@
+name: Build dylib
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build dylib
+      run: |
+        cd Dylib
+        chmod +x build_arm64.sh
+        ./build_arm64.sh
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: libDouyinMysteryUser
+        path: Dylib/libDouyinMysteryUser.dylib
